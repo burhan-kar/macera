@@ -1,0 +1,17 @@
+{
+  "name": "Mete'nin Macera Adası",
+  "short_name": "Macera Adası",
+  "description": "3–6 yaş için Türkçe ve İngilizce eğitici oyunlar",
+  "lang": "tr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#5EC3E6",
+  "theme_color": "#5EC3E6",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
