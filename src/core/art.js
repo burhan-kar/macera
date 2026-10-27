@@ -291,3 +291,33 @@ export const ZONE_ICON = {
   muzik: svg(`<path d="M38 74 V22 L80 12 V64" fill="none" stroke="${INK}" stroke-width="7" stroke-linejoin="round"/>
     <ellipse cx="28" cy="76" rx="14" ry="11" fill="#FF5C8A" ${S}/><ellipse cx="70" cy="66" rx="14" ry="11" fill="#3FA7D6" ${S}/>`, '0 0 100 100'),
 };
+
+// ---------- Ek: tekil İngilizce meyve adları, yeni ikonlar ----------
+const EN1 = { elma: 'apple', portakal: 'orange', cilek: 'strawberry', armut: 'pear', kiraz: 'cherry', muz: 'banana' };
+FRUITS.forEach(f => { f.en1 = EN1[f.id]; });
+
+ICON.check = svg(`<path d="M18 52 L40 74 L84 28" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>`, '0 0 100 100');
+
+Object.assign(ZONE_ICON, {
+  boyama: svg(`<path d="M50 10 C80 10 94 32 92 52 C90 70 74 72 66 64 C59 57 51 62 54 73 C57 85 44 92 31 87 C13 80 6 62 10 43 C14 24 30 10 50 10Z" fill="#FFE3B3" ${S}/>
+    <circle cx="33" cy="34" r="8" fill="#FF4B4B" ${S2}/><circle cx="53" cy="26" r="8" fill="#FFD43B" ${S2}/>
+    <circle cx="72" cy="37" r="8" fill="#3FA7D6" ${S2}/><circle cx="26" cy="57" r="8" fill="#5BBA6F" ${S2}/>`, '0 0 100 100'),
+  harfler: svg(`<rect x="8" y="40" width="44" height="44" rx="8" fill="#FF6F59" ${S}/><rect x="50" y="20" width="44" height="44" rx="8" fill="#3FA7D6" ${S} transform="rotate(10 72 42)"/>
+    <text x="30" y="75" text-anchor="middle" font-family="Fredoka, system-ui" font-weight="700" font-size="32" fill="#fff" stroke="${INK}" stroke-width="2">A</text>
+    <text x="72" y="55" text-anchor="middle" font-family="Fredoka, system-ui" font-weight="700" font-size="32" fill="#fff" stroke="${INK}" stroke-width="2" transform="rotate(10 72 42)">B</text>`, '0 0 100 100'),
+  yapboz: svg(`<path d="M16 34 H38 a11 11 0 1 1 22 0 H82 V52 a11 11 0 1 1 0 22 V90 H16 Z" fill="#FFC93C" ${S}/>
+    <circle cx="40" cy="64" r="8" fill="#fff" opacity=".5"/>`, '0 0 100 100'),
+  oruntu: svg(`<path d="M6 54 H94" stroke="${INK}" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="20" cy="54" r="12" fill="#FF6F59" ${S}/><rect x="37" y="42" width="24" height="24" rx="5" fill="#3FA7D6" ${S}/>
+    <circle cx="78" cy="54" r="12" fill="#FF6F59" ${S}/>
+    <text x="50" y="30" text-anchor="middle" font-family="Fredoka, system-ui" font-weight="700" font-size="22" fill="${INK}">?</text>`, '0 0 100 100'),
+  besle: svg(`<circle cx="37" cy="40" r="15" fill="#FF5A4E" ${S}/><path d="M37 26 q2 -8 6 -10" fill="none" ${S2}/>
+    <circle cx="63" cy="40" r="14" fill="#FFA23A" ${S}/>
+    <path d="M12 50 H88 C86 76 70 88 50 88 C30 88 14 76 12 50Z" fill="#3FA7D6" ${S}/>
+    <path d="M22 62 q28 10 56 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".6"/>`, '0 0 100 100'),
+  saklambac: svg(`<circle cx="30" cy="24" r="8" fill="#A86B45" ${S2}/><circle cx="70" cy="24" r="8" fill="#A86B45" ${S2}/>
+    <circle cx="50" cy="50" r="28" fill="#A86B45" ${S}/>
+    <circle cx="40" cy="44" r="4.5" fill="${INK}"/><circle cx="60" cy="44" r="4.5" fill="${INK}"/>
+    <ellipse cx="50" cy="56" rx="6" ry="4.5" fill="#FF6F91"/>
+    <path d="M6 72 Q50 50 94 72 V94 H6Z" fill="#8A5A3B" ${S}/>`, '0 0 100 100'),
+});

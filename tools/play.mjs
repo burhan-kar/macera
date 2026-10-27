@@ -82,6 +82,46 @@ const plays = {
       await sleep(700);
     });
   },
+  async boyama() {
+    await untilCele(async () => {
+      await p.evaluate(() => {
+        document.querySelectorAll('.cpage .rg').forEach(r => r.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })));
+        const d = document.querySelector('.cdone'); if (d && !d.hidden) d.click();
+      });
+      await sleep(700);
+    });
+  },
+  async harfler() {
+    await untilCele(async () => { await p.evaluate(() => { if (!document.querySelector('.lt-tile.win')) document.querySelector('.lt-tile[data-ok]')?.click(); }); await sleep(500); });
+  },
+  async yapboz() {
+    await untilCele(async () => {
+      const d = await p.evaluate(() => {
+        const pc = [...document.querySelectorAll('.pz-piece')].find(x => !x.dataset.done);
+        if (!pc) return null;
+        const slot = document.querySelector(`.pz-slot[data-i="${pc.dataset.i}"]`);
+        const a = pc.getBoundingClientRect(), b = slot.getBoundingClientRect();
+        return { x1: a.x + a.width / 2, y1: a.y + a.height / 2, x2: b.x + b.width / 2, y2: b.y + b.height / 2 };
+      });
+      if (d) { await p.mouse.move(d.x1, d.y1); await p.mouse.down(); await p.mouse.move(d.x2, d.y2, { steps: 8 }); await p.mouse.up(); }
+      await sleep(450);
+    });
+  },
+  async oruntu() {
+    await untilCele(async () => { await p.evaluate(() => document.querySelector('.pt-opt[data-ok]')?.click()); await sleep(600); });
+  },
+  async besle() {
+    await untilCele(async () => {
+      await p.evaluate(() => {
+        const f = [...document.querySelectorAll('.fd-fruit[data-ok]')].find(x => !x.dataset.done);
+        if (f) { f.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 1 })); f.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 1 })); }
+      });
+      await sleep(450);
+    });
+  },
+  async saklambac() {
+    await untilCele(async () => { await p.evaluate(() => document.querySelectorAll('.mole.up .mole-pop[data-ok]').forEach(x => x.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })))); await sleep(250); }, 150000);
+  },
   async muzik() {
     await untilCele(async () => {
       await p.evaluate(() => document.querySelector('.xbar.next')?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })));
@@ -101,6 +141,7 @@ for (const [id, fn] of Object.entries(plays)) {
     if (id === 'muzik') { await sleep(2500); await shot(`${outDir}/play-${id}-mid.png`); }
     if (id === 'balonlar') { await sleep(2500); await shot(`${outDir}/play-${id}-mid.png`); }
     if (id === 'sayilar') { await shot(`${outDir}/play-${id}-mid.png`); }
+    if (['boyama','harfler','yapboz','oruntu','besle','saklambac'].includes(id)) { await sleep(id === 'saklambac' ? 2600 : id === 'oruntu' ? 2200 : 300); await shot(`${outDir}/play-${id}-mid.png`); }
     await fn();
     results[id] = `OK ${((Date.now() - t0) / 1000).toFixed(0)}s`;
     await sleep(1600);

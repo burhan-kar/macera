@@ -12,8 +12,15 @@ import numbers from './games/numbers.js';
 import shapes from './games/shapes.js';
 import memory from './games/memory.js';
 import music from './games/music.js';
+import coloring from './games/coloring.js';
+import letters from './games/letters.js';
+import puzzle from './games/puzzle.js';
+import patterns from './games/patterns.js';
+import feed from './games/feed.js';
+import peekaboo from './games/peekaboo.js';
 
-const GAMES = [animals, balloons, numbers, shapes, memory, music];
+// İç halka (çift sıra) ve dış halka (tek sıra) dönüşümlü dizilir
+const GAMES = [animals, coloring, balloons, letters, numbers, puzzle, shapes, feed, memory, patterns, music, peekaboo];
 const app = document.getElementById('app');
 
 // ---------- Açılış ----------
@@ -95,6 +102,7 @@ const hub = (() => {
     hide() { island && island.stop(); scr.hidden = true; },
     back() { island && island.back(); },
     relabel() { island && island.refreshBadgeNames(); },
+    debug() { return island && island.debug(); },
   };
 })();
 

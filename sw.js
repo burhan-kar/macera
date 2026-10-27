@@ -1,5 +1,5 @@
 // İnternetsiz çalışma: tüm dosyalar ilk açılışta önbelleğe alınır.
-const VERSION = 'macera-5ec4098d19';
+const VERSION = 'macera-f83f714715';
 const FILES = [
   "./",
   "index.html",

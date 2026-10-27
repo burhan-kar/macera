@@ -90,6 +90,23 @@ export const sfx = {
     n.forEach((f, i) => tone(f, { type: 'triangle', at: i * 0.12, dur: 0.35, vol: 0.28 }));
     [523.25, 659.25, 783.99, 1046.5].forEach(f => tone(f, { type: 'triangle', at: 0.5, dur: 1.1, vol: 0.14 }));
   },
+  paint() {
+    if (!on()) return;
+    noise({ dur: 0.2, vol: 0.4, freq: 700, q: 0.7, sweepTo: 180, type: 'lowpass' });
+    tone(420, { dur: 0.14, vol: 0.12, slideTo: 760 });
+  },
+  chomp() {
+    if (!on()) return;
+    [0, 0.13, 0.26].forEach(at => noise({ at, dur: 0.08, vol: 0.4, freq: 900, q: 1.2, sweepTo: 300 }));
+  },
+  boing() {
+    if (!on()) return;
+    tone(260, { type: 'triangle', dur: 0.3, vol: 0.3, slideTo: 720 });
+  },
+  rise() {
+    if (!on()) return;
+    tone(330, { type: 'sine', dur: 0.12, vol: 0.08, slideTo: 520 });
+  },
   note(freq) {
     if (!on()) return;
     tone(freq, { type: 'sine', dur: 0.9, vol: 0.45, attack: 0.003 });

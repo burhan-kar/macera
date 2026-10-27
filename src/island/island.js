@@ -50,20 +50,20 @@ function lumpy(geo, amt, keepFlatTop = false) {
 
 // ---------- Ada parçaları ----------
 function buildGround(scene) {
-  const sand = mesh(lumpy(new THREE.CylinderGeometry(13.6, 15.2, 1.4, 34, 1), 0.06), C.sand);
+  const sand = mesh(lumpy(new THREE.CylinderGeometry(16.4, 18.2, 1.4, 40, 1), 0.06), C.sand);
   scene.add(sand);
-  const grass = mesh(lumpy(new THREE.CylinderGeometry(11.3, 12.1, 0.9, 34, 1), 0.05, true), C.grass);
+  const grass = mesh(lumpy(new THREE.CylinderGeometry(14.2, 15.0, 0.9, 40, 1), 0.05, true), C.grass);
   grass.position.y = 1.1;
   scene.add(grass);
   // yumuşak tepecikler
-  [[-3.5, -6, 1.6], [5.2, -4.8, 1.3], [-6.4, 2.6, 1.1], [3.2, 6.6, 0.9]].forEach(([x, z, r]) => {
+  [].forEach(([x, z, r]) => {
     const hill = mesh(new THREE.IcosahedronGeometry(r, 1), C.grass2);
     hill.scale.set(1.6, 0.45, 1.6);
     hill.position.set(x, 1.5, z);
     scene.add(hill);
   });
   // sığ su halkası
-  const ring = new THREE.Mesh(new THREE.RingGeometry(14.6, 20, 56), new THREE.MeshBasicMaterial({ color: C.shallow, transparent: true, opacity: 0.5, depthWrite: false }));
+  const ring = new THREE.Mesh(new THREE.RingGeometry(17.6, 24, 64), new THREE.MeshBasicMaterial({ color: C.shallow, transparent: true, opacity: 0.5, depthWrite: false }));
   ring.rotation.x = -Math.PI / 2;
   ring.position.y = 0.16;
   ring.userData.noShadow = true;
@@ -437,7 +437,7 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
   const skyTex = new THREE.CanvasTexture(sky);
   skyTex.colorSpace = THREE.SRGBColorSpace;
   scene.background = skyTex;
-  scene.fog = new THREE.Fog('#CDEFF0', 55, 140);
+  scene.fog = new THREE.Fog('#CDEFF0', 75, 180);
 
   const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 400);
 
@@ -445,8 +445,8 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
   const sun = new THREE.DirectionalLight('#FFF1D6', 2.1);
   sun.position.set(14, 22, 10);
   sun.castShadow = true;
-  sun.shadow.mapSize.set(1024, 1024);
-  Object.assign(sun.shadow.camera, { left: -17, right: 17, top: 17, bottom: -17, near: 1, far: 70 });
+  sun.shadow.mapSize.set(1536, 1536);
+  Object.assign(sun.shadow.camera, { left: -21, right: 21, top: 21, bottom: -21, near: 1, far: 80 });
   sun.shadow.bias = -0.0015;
   scene.add(sun);
 
@@ -471,49 +471,50 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
   }
 
   // bölgeler
-  const R = 7.7;
   const zoneObjs = zones.map((z, i) => {
     const a = (i / zones.length) * Math.PI * 2;
+    const R = i % 2 ? 11.8 : 8.2;
     const g = new THREE.Group();
     const pad = mesh(new THREE.CylinderGeometry(2.1, 2.25, 0.14, 24), C.sandPad);
     pad.position.y = 0.04;
     g.add(pad);
     const lm = LANDMARKS[z.id]();
+    lm.scale.setScalar(0.92);
     g.add(lm);
     g.position.set(Math.sin(a) * R, 1.55, Math.cos(a) * R);
     g.rotation.y = a;
     g.userData.zone = z.id;
     scene.add(g);
-    return { ...z, group: g, lm, angle: a, anchor: new THREE.Vector3(Math.sin(a) * R, 1.55 + 3.9, Math.cos(a) * R) };
+    return { ...z, group: g, lm, angle: a, anchor: new THREE.Vector3(Math.sin(a) * R, 1.55 + 3.1, Math.cos(a) * R) };
   });
 
   // süs: palmiyeler, ağaçlar, kayalar, çiçekler
-  for (let i = 0; i < 9; i++) {
-    const a = (i / 9) * Math.PI * 2 + 0.3;
+  for (let i = 0; i < 11; i++) {
+    const a = (i / 11) * Math.PI * 2 + 0.3;
     const p = palm(rr(3.4, 4.6));
-    const r = rr(11.6, 12.8);
+    const r = rr(15.3, 16.2);
     p.position.set(Math.sin(a) * r, 0.65, Math.cos(a) * r);
     p.rotation.y = -a + Math.PI / 2;
     scene.add(p);
   }
   for (let i = 0; i < 12; i++) {
-    const a = (i / 12) * Math.PI * 2 + Math.PI / 6 + rr(-0.15, 0.15);
+    const a = (i / 12) * Math.PI * 2 + Math.PI / 12 + rr(-0.06, 0.06);
     const t = tree(rr(0.7, 1.1), [C.leaf, C.leaf2, C.leaf3][i % 3]);
-    const r = i % 2 ? rr(10, 10.8) : rr(3.2, 3.7);
+    const r = i % 2 ? rr(9.8, 10.4) : rr(3.2, 3.7);
     t.position.set(Math.sin(a) * r, 1.55, Math.cos(a) * r);
     scene.add(t);
   }
-  for (let i = 0; i < 14; i++) {
+  for (let i = 0; i < 18; i++) {
     const a = rand() * Math.PI * 2;
-    const r = rr(13.2, 15.4);
+    const r = rr(16.4, 18.6);
     const k = rock(rr(0.3, 0.75));
     k.position.set(Math.sin(a) * r, 0.5, Math.cos(a) * r);
     scene.add(k);
   }
   const flowerCols = [C.pink, C.sun, C.cream, C.purple];
-  for (let i = 0; i < 46; i++) {
+  for (let i = 0; i < 70; i++) {
     const a = rand() * Math.PI * 2;
-    const r = rr(2.6, 11);
+    const r = rr(2.6, 14);
     // bölge alanlarına çiçek koyma
     const near = zoneObjs.some(z => Math.hypot(Math.sin(a) * r - z.group.position.x, Math.cos(a) * r - z.group.position.z) < 2.6);
     if (near || Math.abs(r - 5) < 0.6) continue;
@@ -526,7 +527,7 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
   for (let i = 0; i < 6; i++) {
     const c = cloud();
     const a = (i / 6) * Math.PI * 2;
-    const r = rr(26, 42);
+    const r = rr(30, 48);
     c.position.set(Math.sin(a) * r, rr(9, 14), Math.cos(a) * r);
     c.userData.a = a; c.userData.r = r; c.userData.s = rr(0.012, 0.03);
     scene.add(c);
@@ -564,9 +565,9 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
     camera.aspect = aspect;
     camera.updateProjectionMatrix();
     const t = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-    const dW = (portrait ? 22 : 27) / (2 * t * aspect);
-    const dH = (portrait ? 19 : 26) / (2 * t);
-    home = { dist: Math.max(dW, dH), polar: portrait ? 0.86 : 1.02 };
+    const dW = (portrait ? 31.5 : 36) / (2 * t * aspect);
+    const dH = (portrait ? 24 : 33) / (2 * t);
+    home = { dist: Math.max(dW, dH), polar: portrait ? 0.6 : 0.95 };
     controls.minDistance = home.dist * 0.62;
     controls.maxDistance = home.dist * 1.2;
     controls.minPolarAngle = 0.42;
@@ -625,8 +626,9 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
       const x = (v.x * 0.5 + 0.5) * w, y = (-v.y * 0.5 + 0.5) * hgt;
       const facing = new THREE.Vector2(z.anchor.x, z.anchor.z).normalize().dot(camXZ);
       const back = facing < -0.25;
-      b.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-50%, -100%) scale(${back ? 0.78 : 1})`;
+      b.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-50%, -100%) scale(${(0.7 + 0.3 * (facing + 1) / 2).toFixed(2)})`;
       b.classList.toggle('behind', back);
+      b.classList.toggle('far', facing < 0.25);
       b.style.zIndex = String(Math.round((facing + 1) * 100));
       b.style.visibility = v.z > 1 ? 'hidden' : 'visible';
     });
@@ -690,7 +692,7 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
       c.position.z = Math.cos(c.userData.a) * c.userData.r;
     });
     const ba = t * 0.06;
-    ship.position.set(Math.sin(ba) * 21, Math.sin(t * 1.4) * 0.12, Math.cos(ba) * 21);
+    ship.position.set(Math.sin(ba) * 25, Math.sin(t * 1.4) * 0.12, Math.cos(ba) * 21);
     ship.rotation.y = ba + Math.PI;
     ship.rotation.z = Math.sin(t * 1.2) * 0.06;
     center.userData.flag.rotation.x = Math.sin(t * 3) * 0.25;
@@ -706,6 +708,10 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
       if (u.spin) u.spin.forEach((s, i) => (s.rotation.y = t * (i ? 1.4 : 0.9)));
       if (u.lid) u.lid.rotation.x = -1.05 + Math.sin(t * 1.6) * 0.12;
       if (u.sheep) u.sheep.position.y = Math.abs(Math.sin(t * 2.2)) * 0.12;
+      if (u.moles) u.moles.forEach((m, i) => { m.position.y = -0.35 + Math.max(0, Math.sin(t * 1.8 + i * 2.1)) * 0.55; });
+      if (u.bear) u.bear.rotation.z = Math.sin(t * 1.6) * 0.07;
+      if (u.brush) u.brush.rotation.z = 0.5 + Math.sin(t * 3) * 0.25;
+      if (u.beads) u.beads.forEach((b, i) => { b.position.x = b.userData.x + Math.sin(t * 1.2 + i * 0.7) * 0.08; });
     });
 
     renderer.render(scene, camera);
@@ -732,6 +738,7 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
       }
     },
     stop() { running = false; cancelAnimationFrame(raf); },
+    debug() { const v = new THREE.Vector3(0, 1.5, 0).project(camera); return { c: [v.x, v.y], cam: camera.position.toArray().map(n => +n.toFixed(1)), t: controls.target.toArray(), fov: camera.fov, aspect: camera.aspect }; },
     /** Oyundan dönüşte kamerayı adaya geri çek */
     back() {
       busy = false;
@@ -744,3 +751,223 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
     select,
   };
 }
+
+// ---------- Yeni bölgeler ----------
+function letterTexture(letter, bg) {
+  const c = document.createElement('canvas');
+  c.width = c.height = 128;
+  const g = c.getContext('2d');
+  g.fillStyle = bg; g.fillRect(0, 0, 128, 128);
+  g.strokeStyle = C.plum; g.lineWidth = 10; g.strokeRect(5, 5, 118, 118);
+  g.font = '700 84px Fredoka, system-ui, sans-serif';
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.lineWidth = 8; g.strokeText(letter, 64, 70);
+  g.fillStyle = '#fff'; g.fillText(letter, 64, 70);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+function letterBlock(letter, bg, s = 1) {
+  const m = new THREE.MeshStandardMaterial({ map: letterTexture(letter, bg), roughness: 0.75 });
+  const b = new THREE.Mesh(new THREE.BoxGeometry(s, s, s), m);
+  return b;
+}
+function puzzlePiece(color, s = 1) {
+  const sh = new THREE.Shape();
+  sh.moveTo(-1, -1); sh.lineTo(1, -1); sh.lineTo(1, -0.32);
+  sh.absarc(1, 0, 0.32, -Math.PI / 2, Math.PI / 2, false);
+  sh.lineTo(1, 1); sh.lineTo(0.32, 1);
+  sh.absarc(0, 1, 0.32, 0, Math.PI, false);
+  sh.lineTo(-1, 1); sh.lineTo(-1, -1);
+  const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.3, bevelEnabled: true, bevelThickness: 0.06, bevelSize: 0.06, bevelSegments: 1, curveSegments: 8 });
+  geo.center();
+  const m = mesh(geo, color);
+  m.scale.setScalar(s);
+  return m;
+}
+function checkerTexture() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 64;
+  const g = c.getContext('2d');
+  for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) { g.fillStyle = (x + y) % 2 ? '#FFFFFF' : '#FF6F59'; g.fillRect(x * 8, y * 8, 8, 8); }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.magFilter = THREE.NearestFilter;
+  return t;
+}
+
+Object.assign(LANDMARKS, {
+  boyama() {
+    const g = new THREE.Group();
+    [[-0.55, 0.25], [0.55, 0.25], [0, -0.5]].forEach(([x, z], i) => {
+      const leg = mesh(new THREE.BoxGeometry(0.1, 2.6, 0.1), C.woodDark);
+      leg.position.set(x * 0.8, 1.2, z * 0.8);
+      leg.rotation.set(z > 0 ? -0.18 : 0.3, 0, -x * 0.22);
+      g.add(leg);
+    });
+    const board = mesh(new THREE.BoxGeometry(1.8, 1.4, 0.08), C.cream);
+    board.position.set(0, 1.75, 0.3);
+    board.rotation.x = -0.18;
+    g.add(board);
+    [[C.red, -0.45, 1.95, 0.32], [C.sun, 0.2, 2.05, 0.28], [C.blue, 0.45, 1.55, 0.25], [C.leaf2, -0.2, 1.5, 0.3], [C.purple, 0.05, 1.75, 0.22]].forEach(([c, x, y, r]) => {
+      const blob = mesh(new THREE.IcosahedronGeometry(r, 0), c);
+      blob.scale.z = 0.15;
+      blob.position.set(x, y, 0.37);
+      blob.rotation.x = -0.18;
+      g.add(blob);
+    });
+    [[C.red, 1.3, 0.6], [C.sun, 1.55, 0.05], [C.blue, 1.1, -0.35]].forEach(([c, x, z]) => {
+      const pot = mesh(new THREE.CylinderGeometry(0.25, 0.22, 0.34, 10), C.cream);
+      pot.position.set(x, 0.17, z);
+      const paint = mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.05, 10), c);
+      paint.position.set(x, 0.33, z);
+      g.add(pot, paint);
+    });
+    const brush = new THREE.Group();
+    const handle = mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.1, 6), C.wood);
+    const tip = mesh(new THREE.ConeGeometry(0.09, 0.26, 6), C.coral);
+    tip.position.y = 0.66;
+    brush.add(handle, tip);
+    brush.position.set(1.3, 0.9, 0.6);
+    g.add(brush);
+    g.userData.brush = brush;
+    return g;
+  },
+  harfler() {
+    const g = new THREE.Group();
+    const a = letterBlock('A', C.coral, 1.1);
+    a.position.set(-0.6, 0.55, 0);
+    a.rotation.y = 0.25;
+    const b = letterBlock('B', C.blue, 1.1);
+    b.position.set(0.6, 0.55, 0.1);
+    b.rotation.y = -0.2;
+    const c = letterBlock('C', C.leaf, 1.0);
+    c.position.set(0, 1.6, 0.05);
+    c.rotation.y = 0.1;
+    const d = letterBlock('Ç', C.sun, 0.8);
+    d.position.set(1.35, 0.4, 0.9);
+    d.rotation.y = -0.6;
+    g.add(a, b, c, d);
+    return g;
+  },
+  yapboz() {
+    const g = new THREE.Group();
+    const big = puzzlePiece(C.coral, 0.85);
+    big.position.set(-0.2, 1.05, 0);
+    big.rotation.set(-0.15, 0.2, 0.08);
+    const flat1 = puzzlePiece(C.sun, 0.55);
+    flat1.rotation.x = -Math.PI / 2;
+    flat1.position.set(1.1, 0.12, 0.7);
+    const flat2 = puzzlePiece(C.blue, 0.55);
+    flat2.rotation.set(-Math.PI / 2, 0, 1.2);
+    flat2.position.set(-1.3, 0.12, 0.8);
+    g.add(big, flat1, flat2);
+    return g;
+  },
+  oruntu() {
+    const g = new THREE.Group();
+    [-1.1, 1.1].forEach(x => {
+      const post = mesh(new THREE.BoxGeometry(0.16, 2.2, 0.16), C.woodDark);
+      post.position.set(x, 1.1, 0);
+      g.add(post);
+    });
+    const top = mesh(new THREE.BoxGeometry(2.5, 0.16, 0.2), C.woodDark);
+    top.position.y = 2.2;
+    const foot = mesh(new THREE.BoxGeometry(2.7, 0.18, 0.7), C.wood);
+    foot.position.y = 0.09;
+    g.add(top, foot);
+    const beads = [];
+    const sets = [[C.coral, C.sun], [C.blue, C.blue, C.pink], [C.leaf2, C.purple, C.sun]];
+    [0.65, 1.2, 1.75].forEach((y, row) => {
+      const rod = mesh(new THREE.CylinderGeometry(0.03, 0.03, 2.2, 5), C.cream);
+      rod.rotation.z = Math.PI / 2;
+      rod.position.y = y;
+      g.add(rod);
+      for (let i = 0; i < 6; i++) {
+        const bead = mesh(new THREE.SphereGeometry(0.17, 10, 8), sets[row][i % sets[row].length], { roughness: 0.4 });
+        bead.scale.x = 0.8;
+        const x = -0.85 + i * 0.3;
+        bead.position.set(x, y, 0);
+        bead.userData.x = x;
+        g.add(bead);
+        beads.push(bead);
+      }
+    });
+    g.userData.beads = beads;
+    return g;
+  },
+  besle() {
+    const g = new THREE.Group();
+    const blanket = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.05, 2.2), new THREE.MeshStandardMaterial({ map: checkerTexture(), roughness: 0.9 }));
+    blanket.position.y = 0.03;
+    blanket.rotation.y = 0.25;
+    g.add(blanket);
+    const bear = new THREE.Group();
+    const body = mesh(new THREE.IcosahedronGeometry(0.62, 1), '#A86B45');
+    body.scale.set(1, 1.1, 0.9);
+    body.position.y = 0.62;
+    const belly = mesh(new THREE.IcosahedronGeometry(0.4, 1), '#E7C29A');
+    belly.scale.set(1, 1.1, 0.5);
+    belly.position.set(0, 0.58, 0.38);
+    const head = mesh(new THREE.IcosahedronGeometry(0.45, 1), '#A86B45');
+    head.position.y = 1.45;
+    const snout = mesh(new THREE.IcosahedronGeometry(0.2, 1), '#E7C29A');
+    snout.scale.z = 0.7;
+    snout.position.set(0, 1.38, 0.38);
+    const nose = mesh(new THREE.IcosahedronGeometry(0.07, 0), C.plum);
+    nose.position.set(0, 1.44, 0.53);
+    bear.add(body, belly, head, snout, nose);
+    [-0.32, 0.32].forEach(x => {
+      const ear = mesh(new THREE.IcosahedronGeometry(0.15, 0), '#A86B45');
+      ear.position.set(x, 1.8, 0);
+      const eye = mesh(new THREE.IcosahedronGeometry(0.05, 0), C.plum);
+      eye.position.set(x * 0.45, 1.55, 0.4);
+      const paw = mesh(new THREE.IcosahedronGeometry(0.17, 0), '#A86B45');
+      paw.position.set(x * 1.5, 0.15, 0.4);
+      bear.add(ear, eye, paw);
+    });
+    bear.position.set(-0.4, 0.05, -0.2);
+    g.add(bear);
+    g.userData.bear = bear;
+    const basket = mesh(new THREE.CylinderGeometry(0.45, 0.35, 0.4, 10), C.wood);
+    basket.position.set(0.9, 0.25, 0.4);
+    const apple = mesh(new THREE.IcosahedronGeometry(0.18, 1), C.red, { roughness: 0.5 });
+    apple.position.set(0.85, 0.55, 0.4);
+    const pear = mesh(new THREE.IcosahedronGeometry(0.16, 1), '#B5D334', { roughness: 0.5 });
+    pear.position.set(1.05, 0.52, 0.25);
+    const banana = mesh(new THREE.TorusGeometry(0.22, 0.06, 6, 10, Math.PI * 0.8), C.sun);
+    banana.position.set(0.3, 0.12, 0.9);
+    banana.rotation.x = -Math.PI / 2;
+    g.add(basket, apple, pear, banana);
+    return g;
+  },
+  saklambac() {
+    const g = new THREE.Group();
+    const moles = [];
+    [[-1.0, -0.3], [0.9, -0.5], [0, 0.8]].forEach(([x, z], i) => {
+      const mound = mesh(new THREE.CylinderGeometry(0.5, 0.75, 0.32, 10), C.woodDark);
+      mound.position.set(x, 0.16, z);
+      const hole = mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.02, 10), C.plum);
+      hole.position.set(x, 0.33, z);
+      g.add(mound, hole);
+      const mole = new THREE.Group();
+      const head = mesh(new THREE.IcosahedronGeometry(0.36, 1), '#A86B45');
+      head.scale.y = 1.15;
+      const nose = mesh(new THREE.IcosahedronGeometry(0.08, 0), C.pink);
+      nose.position.set(0, 0.05, 0.34);
+      mole.add(head, nose);
+      [-0.13, 0.13].forEach(ex => {
+        const eye = mesh(new THREE.IcosahedronGeometry(0.05, 0), C.plum);
+        eye.position.set(ex, 0.17, 0.3);
+        mole.add(eye);
+      });
+      const inner = new THREE.Group();
+      inner.add(mole);
+      inner.position.set(x, 0.33, z);
+      g.add(inner);
+      moles.push(mole);
+    });
+    g.userData.moles = moles;
+    return g;
+  },
+});

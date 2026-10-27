@@ -167,3 +167,75 @@ export function holdButton(el, ms, onDone) {
   ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => el.addEventListener(ev, cancel));
   el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') onDone(); });
 }
+
+// ---------- Sürükle-bırak (dokun-dokun desteğiyle) ----------
+let picked = null;
+/**
+ * el: sürüklenecek öğe. targets(): olası hedefler. onDrop(el, hedef) true dönerse kabul edilir.
+ * tap(el) verilirse kısa dokunuş doğrudan onu çağırır; verilmezse öğe seçilir ve hedefe dokunulması beklenir.
+ */
+export function draggable(el, { targets, onDrop, tap }) {
+  let sx = 0, sy = 0, moved = false, pid = null;
+  const reset = () => {
+    el.style.transition = 'transform .35s cubic-bezier(.3,1.5,.5,1)';
+    el.style.transform = '';
+    el.classList.remove('lifted');
+  };
+  const attempt = t => { picked = null; const ok = onDrop(el, t); if (!ok) reset(); return ok; };
+  el.addEventListener('pointerdown', e => {
+    if (el.dataset.done) return;
+    e.preventDefault();
+    pid = e.pointerId;
+    try { el.setPointerCapture(pid); } catch { /* yok say */ }
+    sx = e.clientX; sy = e.clientY; moved = false;
+    el.style.transition = 'none';
+    el.classList.add('lifted');
+    if (picked && picked !== el) { picked.classList.remove('lifted'); picked.style.transform = ''; picked = null; }
+  });
+  el.addEventListener('pointermove', e => {
+    if (e.pointerId !== pid) return;
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (Math.hypot(dx, dy) > 8) moved = true;
+    if (moved) el.style.transform = `translate(${dx}px, ${dy}px) scale(1.08)`;
+  });
+  const end = e => {
+    if (e.pointerId !== pid) return;
+    pid = null;
+    if (!moved) {
+      if (tap) { reset(); tap(el); return; }
+      sfx.tap();
+      picked = el;
+      el.style.transform = 'scale(1.08)';
+      return;
+    }
+    el.style.visibility = 'hidden';
+    const under = document.elementFromPoint(e.clientX, e.clientY);
+    el.style.visibility = '';
+    const list = targets();
+    let t = list.find(x => under && x.contains(under));
+    if (!t) {
+      const [px, py] = center(el);
+      let best = Infinity;
+      list.forEach(x => {
+        const [cx, cy] = center(x);
+        const d = Math.hypot(cx - px, cy - py);
+        if (d < best && d < Math.max(x.clientWidth, 70) * 0.75) { best = d; t = x; }
+      });
+    }
+    if (t) attempt(t); else reset();
+  };
+  el.addEventListener('pointerup', end);
+  el.addEventListener('pointercancel', end);
+  if (!tap) targets().forEach(t => t.addEventListener('click', () => { if (picked === el) attempt(t); }));
+}
+
+/** Öğeyi bulunduğu yerden hedefin merkezine uçurur. */
+export function flyInto(el, target, { ms = 280, scale = 0.9 } = {}) {
+  const [tx, ty] = center(target);
+  const [px, py] = center(el);
+  let m;
+  try { m = new DOMMatrix(getComputedStyle(el).transform); } catch { m = { m41: 0, m42: 0 }; }
+  el.style.transition = `transform ${ms}ms cubic-bezier(.3,1.2,.5,1)`;
+  el.style.transform = `translate(${m.m41 + tx - px}px, ${m.m42 + ty - py}px) scale(${scale})`;
+  return wait(ms);
+}
