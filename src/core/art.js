@@ -27,7 +27,7 @@ function starPoints(cx, cy, n, r1, r2, rot = -Math.PI / 2) {
 // ---------- HAYVANLAR ----------
 const ANIMAL_BODIES = {
   kedi: () => `
-    <path d="M24 52 L27 12 L55 34 Z" fill="#FF9F45" ${S}/><path d="M96 52 L93 12 L65 34 Z" fill="#FF9F45" ${S}/>
+    <path class="ear-l" d="M24 52 L27 12 L55 34 Z" fill="#FF9F45" ${S}/><path class="ear-r" d="M96 52 L93 12 L65 34 Z" fill="#FF9F45" ${S}/>
     <path d="M31 40 L32 23 L45 33Z" fill="#FFC1CC"/><path d="M89 40 L88 23 L75 33Z" fill="#FFC1CC"/>
     <ellipse cx="60" cy="68" rx="42" ry="36" fill="#FF9F45" ${S}/>
     <path d="M60 35 v9 M49 37 l2 8 M71 37 l-2 8" stroke="#E07B1F" stroke-width="4" stroke-linecap="round"/>
@@ -39,8 +39,8 @@ const ANIMAL_BODIES = {
   kopek: () => `
     <ellipse cx="60" cy="64" rx="38" ry="38" fill="#F2C48D" ${S}/>
     <ellipse cx="77" cy="57" rx="12" ry="11" fill="#D99A5B"/>
-    <ellipse cx="22" cy="64" rx="13" ry="27" fill="#8A5A3B" ${S} transform="rotate(18 22 64)"/>
-    <ellipse cx="98" cy="64" rx="13" ry="27" fill="#8A5A3B" ${S} transform="rotate(-18 98 64)"/>
+    <ellipse class="ear-l" cx="22" cy="64" rx="13" ry="27" fill="#8A5A3B" ${S} transform="rotate(18 22 64)"/>
+    <ellipse class="ear-r" cx="98" cy="64" rx="13" ry="27" fill="#8A5A3B" ${S} transform="rotate(-18 98 64)"/>
     <ellipse cx="60" cy="83" rx="21" ry="15" fill="#FFF1DE"/>
     ${eyes(58, 45, 76)}
     <path d="M54 88 q6 12 12 0 z" fill="#FF6F91" ${S2}/>
@@ -48,8 +48,8 @@ const ANIMAL_BODIES = {
     <ellipse cx="60" cy="76" rx="9" ry="6.5" fill="${INK}"/><ellipse cx="57" cy="74" rx="3" ry="1.8" fill="#fff" opacity=".7"/>`,
   inek: () => `
     <path d="M36 34 q-9 -12 -3 -22 q5 11 13 15z" fill="#FFF1DE" ${S}/><path d="M84 34 q9 -12 3 -22 q-5 11 -13 15z" fill="#FFF1DE" ${S}/>
-    <ellipse cx="18" cy="52" rx="15" ry="8" fill="#fff" ${S} transform="rotate(-15 18 52)"/>
-    <ellipse cx="102" cy="52" rx="15" ry="8" fill="#fff" ${S} transform="rotate(15 102 52)"/>
+    <ellipse class="ear-l" cx="18" cy="52" rx="15" ry="8" fill="#fff" ${S} transform="rotate(-15 18 52)"/>
+    <ellipse class="ear-r" cx="102" cy="52" rx="15" ry="8" fill="#fff" ${S} transform="rotate(15 102 52)"/>
     <ellipse cx="60" cy="60" rx="37" ry="37" fill="#fff" ${S}/>
     <path d="M30 50 q6 -18 22 -14 q6 12 -6 18 q-12 5 -16 -4z" fill="${INK}" opacity=".85"/>
     <ellipse cx="84" cy="66" rx="8" ry="6" fill="${INK}" opacity=".85"/>
@@ -74,7 +74,7 @@ const ANIMAL_BODIES = {
       <path d="M55 86 q5 5 10 0" fill="none" ${S}/>`;
   },
   aslan: () => `
-    <polygon points="${starPoints(60, 62, 14, 54, 42)}" fill="#E8781E" ${S}/>
+    <polygon class="mane" points="${starPoints(60, 62, 14, 54, 42)}" fill="#E8781E" ${S}/>
     <circle cx="36" cy="38" r="10" fill="#FFC85C" ${S}/><circle cx="84" cy="38" r="10" fill="#FFC85C" ${S}/>
     <circle cx="36" cy="38" r="5" fill="#F7A73C"/><circle cx="84" cy="38" r="5" fill="#F7A73C"/>
     <circle cx="60" cy="64" r="32" fill="#FFC85C" ${S}/>
@@ -83,7 +83,7 @@ const ANIMAL_BODIES = {
     <path d="M53 72 h14 l-7 7z" fill="#8A4B2A" ${S2}/>
     ${muzzleMouth(79)}`,
   fil: () => `
-    <ellipse cx="24" cy="60" rx="22" ry="29" fill="#A9BED3" ${S}/><ellipse cx="96" cy="60" rx="22" ry="29" fill="#A9BED3" ${S}/>
+    <ellipse class="ear-l" cx="24" cy="60" rx="22" ry="29" fill="#A9BED3" ${S}/><ellipse class="ear-r" cx="96" cy="60" rx="22" ry="29" fill="#A9BED3" ${S}/>
     <ellipse cx="26" cy="62" rx="13" ry="19" fill="#F5B7C6"/><ellipse cx="94" cy="62" rx="13" ry="19" fill="#F5B7C6"/>
     <ellipse cx="60" cy="56" rx="31" ry="33" fill="#A9BED3" ${S}/>
     <path d="M60 70 q0 26 16 28" fill="none" stroke="${INK}" stroke-width="22" stroke-linecap="round"/>
@@ -91,7 +91,7 @@ const ANIMAL_BODIES = {
     <path d="M55 84 h10 M57 91 h10" stroke="#7F97AE" stroke-width="2.5" stroke-linecap="round"/>
     ${eyes(54, 47, 73)}${cheeks(68, 38, 82)}`,
   kurbaga: () => `
-    <circle cx="36" cy="38" r="17" fill="#7ACB5A" ${S}/><circle cx="84" cy="38" r="17" fill="#7ACB5A" ${S}/>
+    <circle class="ear-l" cx="36" cy="38" r="17" fill="#7ACB5A" ${S}/><circle class="ear-r" cx="84" cy="38" r="17" fill="#7ACB5A" ${S}/>
     <ellipse cx="60" cy="70" rx="47" ry="32" fill="#7ACB5A" ${S}/>
     <circle cx="36" cy="38" r="17" fill="#7ACB5A"/><circle cx="84" cy="38" r="17" fill="#7ACB5A"/>
     <ellipse cx="60" cy="72" rx="44" ry="28" fill="#7ACB5A"/>
@@ -101,7 +101,7 @@ const ANIMAL_BODIES = {
     <path d="M28 70 q32 26 64 0" fill="none" ${S}/>
     ${cheeks(74, 24, 96)}`,
   ayi: () => `
-    <circle cx="28" cy="32" r="14" fill="#A86B45" ${S}/><circle cx="92" cy="32" r="14" fill="#A86B45" ${S}/>
+    <circle class="ear-l" cx="28" cy="32" r="14" fill="#A86B45" ${S}/><circle class="ear-r" cx="92" cy="32" r="14" fill="#A86B45" ${S}/>
     <circle cx="28" cy="32" r="7" fill="#E7B48A"/><circle cx="92" cy="32" r="7" fill="#E7B48A"/>
     <ellipse cx="60" cy="64" rx="41" ry="37" fill="#A86B45" ${S}/>
     <ellipse cx="60" cy="81" rx="19" ry="14" fill="#E7C29A"/>
@@ -109,8 +109,8 @@ const ANIMAL_BODIES = {
     <ellipse cx="60" cy="74" rx="8.5" ry="5.5" fill="${INK}"/>
     ${muzzleMouth(79)}`,
   tavsan: () => `
-    <ellipse cx="43" cy="28" rx="11" ry="27" fill="#F4F1F6" ${S} transform="rotate(-8 43 28)"/>
-    <ellipse cx="77" cy="28" rx="11" ry="27" fill="#F4F1F6" ${S} transform="rotate(8 77 28)"/>
+    <ellipse class="ear-l" cx="43" cy="28" rx="11" ry="27" fill="#F4F1F6" ${S} transform="rotate(-8 43 28)"/>
+    <ellipse class="ear-r" cx="77" cy="28" rx="11" ry="27" fill="#F4F1F6" ${S} transform="rotate(8 77 28)"/>
     <ellipse cx="43" cy="30" rx="5" ry="18" fill="#FFC1CC" transform="rotate(-8 43 30)"/>
     <ellipse cx="77" cy="30" rx="5" ry="18" fill="#FFC1CC" transform="rotate(8 77 30)"/>
     <ellipse cx="60" cy="74" rx="37" ry="32" fill="#F4F1F6" ${S}/>
@@ -122,10 +122,10 @@ const ANIMAL_BODIES = {
     <path d="M56 26 q-8 -14 4 -16 q-3 8 7 13" fill="#FFD43B" ${S}/>
     <circle cx="60" cy="62" r="38" fill="#FFD43B" ${S}/>
     ${eyes(56, 46, 74)}${cheeks(72, 32, 88)}
-    <path d="M34 78 q26 -14 52 0 q-26 20 -52 0 z" fill="#FF9A3C" ${S}/>
+    <path class="beak" d="M34 78 q26 -14 52 0 q-26 20 -52 0 z" fill="#FF9A3C" ${S}/>
     <path d="M38 79 q22 5 44 0" fill="none" ${S2}/>`,
   maymun: () => `
-    <circle cx="20" cy="62" r="14" fill="#9A5F3A" ${S}/><circle cx="100" cy="62" r="14" fill="#9A5F3A" ${S}/>
+    <circle class="ear-l" cx="20" cy="62" r="14" fill="#9A5F3A" ${S}/><circle class="ear-r" cx="100" cy="62" r="14" fill="#9A5F3A" ${S}/>
     <circle cx="20" cy="62" r="8" fill="#F2C9A0"/><circle cx="100" cy="62" r="8" fill="#F2C9A0"/>
     <circle cx="60" cy="60" r="38" fill="#9A5F3A" ${S}/>
     <circle cx="47" cy="58" r="15" fill="#F2C9A0"/><circle cx="73" cy="58" r="15" fill="#F2C9A0"/>
@@ -135,7 +135,7 @@ const ANIMAL_BODIES = {
     <circle cx="56" cy="73" r="2" fill="${INK}"/><circle cx="64" cy="73" r="2" fill="${INK}"/>
     <path d="M47 82 q13 11 26 0" fill="none" ${S}/>`,
   panda: () => `
-    <circle cx="28" cy="32" r="13" fill="${INK}"/><circle cx="92" cy="32" r="13" fill="${INK}"/>
+    <circle class="ear-l" cx="28" cy="32" r="13" fill="${INK}"/><circle class="ear-r" cx="92" cy="32" r="13" fill="${INK}"/>
     <ellipse cx="60" cy="64" rx="41" ry="37" fill="#fff" ${S}/>
     <ellipse cx="44" cy="62" rx="11" ry="14" fill="${INK}" transform="rotate(30 44 62)"/>
     <ellipse cx="76" cy="62" rx="11" ry="14" fill="${INK}" transform="rotate(-30 76 62)"/>
@@ -162,7 +162,7 @@ export const ANIMALS = [
 ];
 
 export function animalSVG(id, label = '') {
-  return svg(ANIMAL_BODIES[id](), '0 0 120 120', label);
+  return svg(`<g class="creature">${ANIMAL_BODIES[id]()}</g>`, '0 0 120 120', label);
 }
 
 // ---------- MEYVELER ----------
@@ -252,6 +252,7 @@ export function mascotSVG() {
       <ellipse class="pupil" cx="61" cy="89" rx="7.5" ry="9" fill="${INK}"/><ellipse class="pupil" cx="101" cy="89" rx="7.5" ry="9" fill="${INK}"/>
       <circle cx="64.5" cy="84.5" r="2.8" fill="#fff"/><circle cx="104.5" cy="84.5" r="2.8" fill="#fff"/>
     </g>
+    <g class="brows"><path d="M48 62 q12 -7 24 -2" fill="none" stroke="${INK}" stroke-width="4" stroke-linecap="round"/><path d="M112 60 q-12 -7 -24 -2" fill="none" stroke="${INK}" stroke-width="4" stroke-linecap="round"/></g>
     <ellipse cx="44" cy="110" rx="9" ry="5.5" fill="#FF4F6D" opacity=".35"/><ellipse cx="116" cy="110" rx="9" ry="5.5" fill="#FF4F6D" opacity=".35"/>
     <path class="mouth-smile" d="M68 108 q12 13 24 0" fill="none" stroke="${INK}" stroke-width="4" stroke-linecap="round"/>
     <ellipse class="mouth-open" cx="80" cy="112" rx="9" ry="7.5" fill="#8E2C48" ${S2}/>`, '0 0 160 170', 'Pofi');
@@ -320,4 +321,19 @@ Object.assign(ZONE_ICON, {
     <circle cx="40" cy="44" r="4.5" fill="${INK}"/><circle cx="60" cy="44" r="4.5" fill="${INK}"/>
     <ellipse cx="50" cy="56" rx="6" ry="4.5" fill="#FF6F91"/>
     <path d="M6 72 Q50 50 94 72 V94 H6Z" fill="#8A5A3B" ${S}/>`, '0 0 100 100'),
+});
+
+// Yeni bölge rozetleri
+Object.assign(ZONE_ICON, {
+  duygular: svg(`<circle cx="50" cy="50" r="38" fill="#FFD98E" ${S}/>
+    <path d="M30 40 q7 -7 14 0 M56 40 q7 -7 14 0" fill="none" ${S}/>
+    <ellipse cx="37" cy="46" rx="5" ry="6" fill="${INK}"/><ellipse cx="63" cy="46" rx="5" ry="6" fill="${INK}"/>
+    <path d="M32 62 q18 18 36 0 q-18 7 -36 0z" fill="#B3345A" ${S2}/>`, '0 0 100 100'),
+  araclar: svg(`<path d="M22 54 L32 38 H64 L78 54 Z" fill="#8FD6F5" ${S2}/>
+    <path d="M10 72 q0 -18 14 -20 h52 q14 2 14 20 v6 q0 5 -6 5 H16 q-6 0 -6 -5z" fill="#FF5A4E" ${S}/>
+    <circle cx="28" cy="82" r="10" fill="${INK}"/><circle cx="72" cy="82" r="10" fill="${INK}"/>
+    <circle cx="28" cy="82" r="4" fill="#E8E4F0"/><circle cx="72" cy="82" r="4" fill="#E8E4F0"/>`, '0 0 100 100'),
+  hava: svg(`<g>${[0,45,90,135,180,225,270,315].map(a => `<rect x="46" y="4" width="8" height="14" rx="4" fill="#FFC93C" ${S2} transform="rotate(${a} 50 44)"/>`).join('')}</g>
+    <circle cx="50" cy="44" r="24" fill="#FFD43B" ${S}/>
+    <path d="M30 88 a14 14 0 0 1 4 -27 a18 18 0 0 1 34 -2 a13 13 0 0 1 2 29z" fill="#F2F4FA" ${S}/>`, '0 0 100 100'),
 });

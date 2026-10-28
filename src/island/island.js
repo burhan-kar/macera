@@ -50,9 +50,9 @@ function lumpy(geo, amt, keepFlatTop = false) {
 
 // ---------- Ada parçaları ----------
 function buildGround(scene) {
-  const sand = mesh(lumpy(new THREE.CylinderGeometry(16.4, 18.2, 1.4, 40, 1), 0.06), C.sand);
+  const sand = mesh(lumpy(new THREE.CylinderGeometry(19.6, 21.6, 1.5, 44, 1), 0.06), C.sand);
   scene.add(sand);
-  const grass = mesh(lumpy(new THREE.CylinderGeometry(14.2, 15.0, 0.9, 40, 1), 0.05, true), C.grass);
+  const grass = mesh(lumpy(new THREE.CylinderGeometry(17.2, 18.1, 1.0, 44, 1), 0.05, true), C.grass);
   grass.position.y = 1.1;
   scene.add(grass);
   // yumuşak tepecikler
@@ -63,7 +63,7 @@ function buildGround(scene) {
     scene.add(hill);
   });
   // sığ su halkası
-  const ring = new THREE.Mesh(new THREE.RingGeometry(17.6, 24, 64), new THREE.MeshBasicMaterial({ color: C.shallow, transparent: true, opacity: 0.5, depthWrite: false }));
+  const ring = new THREE.Mesh(new THREE.RingGeometry(21, 28, 64), new THREE.MeshBasicMaterial({ color: C.shallow, transparent: true, opacity: 0.5, depthWrite: false }));
   ring.rotation.x = -Math.PI / 2;
   ring.position.y = 0.16;
   ring.userData.noShadow = true;
@@ -437,7 +437,7 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
   const skyTex = new THREE.CanvasTexture(sky);
   skyTex.colorSpace = THREE.SRGBColorSpace;
   scene.background = skyTex;
-  scene.fog = new THREE.Fog('#CDEFF0', 75, 180);
+  scene.fog = new THREE.Fog('#CDEFF0', 90, 210);
 
   const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 400);
 
@@ -446,7 +446,7 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
   sun.position.set(14, 22, 10);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1536, 1536);
-  Object.assign(sun.shadow.camera, { left: -21, right: 21, top: 21, bottom: -21, near: 1, far: 80 });
+  Object.assign(sun.shadow.camera, { left: -25, right: 25, top: 25, bottom: -25, near: 1, far: 90 });
   sun.shadow.bias = -0.0015;
   scene.add(sun);
 
@@ -462,37 +462,39 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
   scene.add(center);
 
   // patika taşları
-  for (let i = 0; i < 30; i++) {
-    const a = (i / 30) * Math.PI * 2;
-    const s = mesh(new THREE.CylinderGeometry(0.32, 0.36, 0.1, 6), C.cream);
-    s.position.set(Math.sin(a) * 5, 1.58, Math.cos(a) * 5);
-    s.rotation.y = rand() * 3;
-    scene.add(s);
-  }
+  [[5.4, 34], [11.9, 60]].forEach(([rad, n]) => {
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      const st = mesh(new THREE.CylinderGeometry(0.32, 0.36, 0.1, 6), C.cream);
+      st.position.set(Math.sin(a) * rad, 1.63, Math.cos(a) * rad);
+      st.rotation.y = rand() * 3;
+      scene.add(st);
+    }
+  })
 
   // bölgeler
   const zoneObjs = zones.map((z, i) => {
     const a = (i / zones.length) * Math.PI * 2;
-    const R = i % 2 ? 11.8 : 8.2;
+    const R = i % 2 ? 14.4 : 9.4;
     const g = new THREE.Group();
-    const pad = mesh(new THREE.CylinderGeometry(2.1, 2.25, 0.14, 24), C.sandPad);
+    const pad = mesh(new THREE.CylinderGeometry(2.0, 2.15, 0.14, 24), C.sandPad);
     pad.position.y = 0.04;
     g.add(pad);
     const lm = LANDMARKS[z.id]();
-    lm.scale.setScalar(0.92);
+    lm.scale.setScalar(0.9);
     g.add(lm);
     g.position.set(Math.sin(a) * R, 1.55, Math.cos(a) * R);
     g.rotation.y = a;
     g.userData.zone = z.id;
     scene.add(g);
-    return { ...z, group: g, lm, angle: a, anchor: new THREE.Vector3(Math.sin(a) * R, 1.55 + 3.1, Math.cos(a) * R) };
+    return { ...z, group: g, lm, angle: a, anchor: new THREE.Vector3(Math.sin(a) * R, 1.55 + (i % 2 ? 3.9 : 2.7), Math.cos(a) * R) };
   });
 
   // süs: palmiyeler, ağaçlar, kayalar, çiçekler
   for (let i = 0; i < 11; i++) {
     const a = (i / 11) * Math.PI * 2 + 0.3;
     const p = palm(rr(3.4, 4.6));
-    const r = rr(15.3, 16.2);
+    const r = rr(18.4, 19.4);
     p.position.set(Math.sin(a) * r, 0.65, Math.cos(a) * r);
     p.rotation.y = -a + Math.PI / 2;
     scene.add(p);
@@ -500,13 +502,13 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
   for (let i = 0; i < 12; i++) {
     const a = (i / 12) * Math.PI * 2 + Math.PI / 12 + rr(-0.06, 0.06);
     const t = tree(rr(0.7, 1.1), [C.leaf, C.leaf2, C.leaf3][i % 3]);
-    const r = i % 2 ? rr(9.8, 10.4) : rr(3.2, 3.7);
+    const r = i % 2 ? rr(11.9, 12.5) : rr(3.4, 4.0);
     t.position.set(Math.sin(a) * r, 1.55, Math.cos(a) * r);
     scene.add(t);
   }
   for (let i = 0; i < 18; i++) {
     const a = rand() * Math.PI * 2;
-    const r = rr(16.4, 18.6);
+    const r = rr(19.6, 22);
     const k = rock(rr(0.3, 0.75));
     k.position.set(Math.sin(a) * r, 0.5, Math.cos(a) * r);
     scene.add(k);
@@ -514,9 +516,9 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
   const flowerCols = [C.pink, C.sun, C.cream, C.purple];
   for (let i = 0; i < 70; i++) {
     const a = rand() * Math.PI * 2;
-    const r = rr(2.6, 14);
+    const r = rr(2.8, 17);
     // bölge alanlarına çiçek koyma
-    const near = zoneObjs.some(z => Math.hypot(Math.sin(a) * r - z.group.position.x, Math.cos(a) * r - z.group.position.z) < 2.6);
+    const near = zoneObjs.some(z => Math.hypot(Math.sin(a) * r - z.group.position.x, Math.cos(a) * r - z.group.position.z) < 2.8);
     if (near || Math.abs(r - 5) < 0.6) continue;
     const f = mesh(new THREE.IcosahedronGeometry(0.13, 0), flowerCols[i % 4]);
     f.position.set(Math.sin(a) * r, 1.62, Math.cos(a) * r);
@@ -565,8 +567,8 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
     camera.aspect = aspect;
     camera.updateProjectionMatrix();
     const t = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-    const dW = (portrait ? 31.5 : 36) / (2 * t * aspect);
-    const dH = (portrait ? 24 : 33) / (2 * t);
+    const dW = (portrait ? 35 : 39) / (2 * t * aspect);
+    const dH = (portrait ? 25.5 : 31) / (2 * t);
     home = { dist: Math.max(dW, dH), polar: portrait ? 0.6 : 0.95 };
     controls.minDistance = home.dist * 0.62;
     controls.maxDistance = home.dist * 1.2;
@@ -621,17 +623,19 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
   function updateBadges() {
     const w = canvas.clientWidth, hgt = canvas.clientHeight;
     const camXZ = new THREE.Vector2(camera.position.x, camera.position.z).normalize();
+    let best = null, bestF = -2;
     badges.forEach(({ z, b }) => {
       v.copy(z.anchor).project(camera);
       const x = (v.x * 0.5 + 0.5) * w, y = (-v.y * 0.5 + 0.5) * hgt;
       const facing = new THREE.Vector2(z.anchor.x, z.anchor.z).normalize().dot(camXZ);
-      const back = facing < -0.25;
-      b.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-50%, -100%) scale(${(0.7 + 0.3 * (facing + 1) / 2).toFixed(2)})`;
-      b.classList.toggle('behind', back);
-      b.classList.toggle('far', facing < 0.25);
+      b.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-50%, -100%) scale(${(0.72 + 0.28 * (facing + 1) / 2).toFixed(2)})`;
+      b.classList.toggle('behind', facing < -0.25);
       b.style.zIndex = String(Math.round((facing + 1) * 100));
       b.style.visibility = v.z > 1 ? 'hidden' : 'visible';
+      if (facing > bestF && v.z <= 1) { bestF = facing; best = b; }
     });
+    // Ad etiketi karmaşa yapmasın: yalnızca en öndeki bölgede görünür
+    badges.forEach(({ b }) => b.classList.toggle('far', b !== best));
   }
 
   // ---------- Dokunma ----------
@@ -692,7 +696,7 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
       c.position.z = Math.cos(c.userData.a) * c.userData.r;
     });
     const ba = t * 0.06;
-    ship.position.set(Math.sin(ba) * 25, Math.sin(t * 1.4) * 0.12, Math.cos(ba) * 21);
+    ship.position.set(Math.sin(ba) * 29, Math.sin(t * 1.4) * 0.12, Math.cos(ba) * 21);
     ship.rotation.y = ba + Math.PI;
     ship.rotation.z = Math.sin(t * 1.2) * 0.06;
     center.userData.flag.rotation.x = Math.sin(t * 3) * 0.25;
@@ -712,6 +716,11 @@ export function createIsland({ canvas, badgeLayer, zones, onSelect, onTreehouse 
       if (u.bear) u.bear.rotation.z = Math.sin(t * 1.6) * 0.07;
       if (u.brush) u.brush.rotation.z = 0.5 + Math.sin(t * 3) * 0.25;
       if (u.beads) u.beads.forEach((b, i) => { b.position.x = b.userData.x + Math.sin(t * 1.2 + i * 0.7) * 0.08; });
+      if (u.heart) { const k = 1 + Math.sin(t * 3) * 0.12; u.heart.scale.setScalar(k); u.heart.position.y = 2.5 + Math.sin(t * 1.4) * 0.12; }
+      if (u.car) { u.car.position.x = Math.sin(t * 0.55) * 1.5; u.car.rotation.y = Math.cos(t * 0.55) > 0 ? 0.2 : Math.PI + 0.2; }
+      if (u.vane) u.vane.rotation.y = t * 0.9;
+      if (u.cloudPuff) u.cloudPuff.position.x = 1.4 + Math.sin(t * 0.7) * 0.18;
+      if (u.drops) u.drops.forEach(d => { const k = ((t * 1.3 + d.userData.ph) % 1); d.position.y = d.userData.y0 - k * 1.7; d.visible = k > 0.05; });
     });
 
     renderer.render(scene, camera);
@@ -968,6 +977,126 @@ Object.assign(LANDMARKS, {
       moles.push(mole);
     });
     g.userData.moles = moles;
+    return g;
+  },
+});
+
+// ---------- Ek bölgeler: Duygular, Araçlar, Hava ----------
+Object.assign(LANDMARKS, {
+  duygular() {
+    const g = new THREE.Group();
+    // Yüz totemleri
+    const faces = [[C.sun, -1.1, 0.25], [C.blue, 0, -0.1], [C.pink, 1.1, 0.3]];
+    faces.forEach(([c, x, z], i) => {
+      const post = mesh(new THREE.CylinderGeometry(0.1, 0.14, 1.1 + i * 0.25, 6), C.woodDark);
+      post.position.set(x, (1.1 + i * 0.25) / 2, z);
+      const head = mesh(new THREE.SphereGeometry(0.52, 14, 12), c, { roughness: 0.6 });
+      head.position.set(x, 1.1 + i * 0.25 + 0.4, z);
+      g.add(post, head);
+      [-0.19, 0.19].forEach(ex => {
+        const eye = mesh(new THREE.SphereGeometry(0.08, 8, 6), C.plum);
+        eye.position.set(x + ex, 1.1 + i * 0.25 + 0.5, z + 0.45);
+        g.add(eye);
+      });
+      const mouth = mesh(i === 1 ? new THREE.BoxGeometry(0.26, 0.07, 0.07) : new THREE.TorusGeometry(0.17, 0.05, 6, 10, Math.PI), C.plum);
+      if (i !== 1) mouth.rotation.z = i === 0 ? Math.PI : 0;
+      mouth.position.set(x, 1.1 + i * 0.25 + 0.22, z + 0.45);
+      g.add(mouth);
+    });
+    const heart = mesh(new THREE.SphereGeometry(0.3, 12, 10), C.pink, { roughness: 0.4, emissive: C.pink, emissiveIntensity: 0.2 });
+    heart.position.set(0, 2.5, 0);
+    g.add(heart);
+    g.userData.heart = heart;
+    return g;
+  },
+  araclar() {
+    const g = new THREE.Group();
+    // Yol
+    const road = mesh(new THREE.BoxGeometry(4.4, 0.08, 1.5), '#8A8FA3');
+    road.position.y = 0.06;
+    road.rotation.y = 0.2;
+    g.add(road);
+    for (let i = -1; i <= 1; i++) {
+      const dash = mesh(new THREE.BoxGeometry(0.5, 0.04, 0.12), C.cream);
+      dash.position.set(i * 1.3, 0.12, 0);
+      dash.rotation.y = 0.2;
+      g.add(dash);
+    }
+    // Araba
+    const car = new THREE.Group();
+    const body = mesh(new THREE.BoxGeometry(1.5, 0.45, 0.8), C.red);
+    body.position.y = 0.42;
+    const cabin = mesh(new THREE.BoxGeometry(0.8, 0.4, 0.7), '#8FD6F5');
+    cabin.position.set(-0.05, 0.82, 0);
+    car.add(body, cabin);
+    [[-0.5, 0.42], [0.5, 0.42], [-0.5, -0.42], [0.5, -0.42]].forEach(([x, z]) => {
+      const w = mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.14, 10), C.plum);
+      w.rotation.x = Math.PI / 2;
+      w.position.set(x, 0.22, z);
+      car.add(w);
+    });
+    car.position.y = 0.1;
+    g.add(car);
+    g.userData.car = car;
+    // Trafik ışığı
+    const pole = mesh(new THREE.CylinderGeometry(0.07, 0.07, 1.8, 6), C.woodDark);
+    pole.position.set(1.8, 0.9, 1.1);
+    const box = mesh(new THREE.BoxGeometry(0.3, 0.72, 0.26), C.plum);
+    box.position.set(1.8, 2.0, 1.1);
+    g.add(pole, box);
+    [[C.red, 2.22], [C.sun, 2.0], [C.leaf2, 1.78]].forEach(([c, y]) => {
+      const l = mesh(new THREE.SphereGeometry(0.09, 8, 6), c, { emissive: c, emissiveIntensity: 0.5 });
+      l.position.set(1.8, y, 1.25);
+      g.add(l);
+    });
+    return g;
+  },
+  hava() {
+    const g = new THREE.Group();
+    // Gözlem direği ve fırıldak
+    const pole = mesh(new THREE.CylinderGeometry(0.09, 0.13, 2.6, 7), C.cream);
+    pole.position.y = 1.3;
+    g.add(pole);
+    const vane = new THREE.Group();
+    const arrow = mesh(new THREE.ConeGeometry(0.17, 0.5, 4), C.coral);
+    arrow.rotation.z = -Math.PI / 2;
+    arrow.position.x = 0.55;
+    const tail = mesh(new THREE.BoxGeometry(0.4, 0.3, 0.03), C.sun);
+    tail.position.x = -0.5;
+    const bar = mesh(new THREE.BoxGeometry(1.1, 0.06, 0.06), C.woodDark);
+    vane.add(arrow, tail, bar);
+    vane.position.y = 2.75;
+    g.add(vane);
+    g.userData.vane = vane;
+    // Güneş ve bulut
+    const sunBall = mesh(new THREE.SphereGeometry(0.42, 14, 12), C.sun, { emissive: C.sun, emissiveIntensity: 0.4 });
+    sunBall.position.set(-1.3, 2.3, 0.3);
+    g.add(sunBall);
+    const cl = new THREE.Group();
+    [[0, 0, 0.42], [0.42, 0.1, 0.34], [-0.4, 0.05, 0.3]].forEach(([x, y, r]) => {
+      const p = mesh(new THREE.SphereGeometry(r, 10, 8), C.white, { roughness: 1 });
+      p.position.set(x, y, 0);
+      cl.add(p);
+    });
+    cl.position.set(1.4, 2.5, -0.2);
+    g.add(cl);
+    g.userData.cloudPuff = cl;
+    // Yağmur damlaları
+    const drops = [];
+    for (let i = 0; i < 5; i++) {
+      const d = mesh(new THREE.ConeGeometry(0.07, 0.22, 5), C.blue, { roughness: 0.3 });
+      d.position.set(1.4 + (i - 2) * 0.22, 2.0, -0.2 + (i % 2) * 0.12);
+      d.userData.y0 = 2.0;
+      d.userData.ph = i * 0.6;
+      g.add(d);
+      drops.push(d);
+    }
+    g.userData.drops = drops;
+    // Zemin su birikintisi
+    const puddle = mesh(new THREE.CylinderGeometry(0.6, 0.6, 0.04, 14), C.shallow, { roughness: 0.2, metalness: 0.2 });
+    puddle.position.set(1.4, 0.06, 0.9);
+    puddle.scale.x = 1.4;
+    g.add(puddle);
     return g;
   },
 });

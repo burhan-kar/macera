@@ -4,6 +4,8 @@ import { ZONE_ICON, ICON, ANIMALS, animalSVG } from './core/art.js';
 import { h, mascot, mood, confetti, center, flyStar, starCounter, refreshStars, celebrate, holdButton, wait } from './core/ui.js';
 import { say, stop as stopVoice, unlockVoice, label, subLabel } from './core/voice.js';
 import { sfx, unlockAudio } from './core/sfx.js';
+import { playMusic, startAmbience, stopAmbience, refreshMusic, buzz, HAPTIC } from './core/music.js';
+import { sceneLayer, curtain } from './core/scene.js';
 import { store, save, addStars, markPlayed, resetProgress } from './core/store.js';
 
 import animals from './games/animals.js';
@@ -18,9 +20,12 @@ import puzzle from './games/puzzle.js';
 import patterns from './games/patterns.js';
 import feed from './games/feed.js';
 import peekaboo from './games/peekaboo.js';
+import emotions from './games/emotions.js';
+import vehicles from './games/vehicles.js';
+import weather from './games/weather.js';
 
 // İç halka (çift sıra) ve dış halka (tek sıra) dönüşümlü dizilir
-const GAMES = [animals, coloring, balloons, letters, numbers, puzzle, shapes, feed, memory, patterns, music, peekaboo];
+const GAMES = [animals, coloring, balloons, letters, numbers, puzzle, shapes, feed, memory, patterns, music, peekaboo, emotions, vehicles, weather];
 const app = document.getElementById('app');
 
 // ---------- Açılış ----------
@@ -38,6 +43,9 @@ function splash() {
     unlockAudio();
     unlockVoice();
     sfx.whoosh();
+    buzz(HAPTIC.tap);
+    playMusic('island');
+    startAmbience();
     scr.classList.add('out');
     setTimeout(() => scr.remove(), 600);
     hub.show(true);
@@ -76,9 +84,11 @@ const hub = (() => {
     if (island) return;
     island = createIsland({
       canvas, badgeLayer, zones,
-      onSelect(id, phase) {
-        if (phase === 'start') { sfx.whoosh(); stopVoice(); scr.classList.add('leaving'); }
-        else openGame(GAMES.find(g => g.id === id));
+      async onSelect(id, phase) {
+        if (phase === 'start') { sfx.whoosh(); buzz(HAPTIC.tap); stopVoice(); scr.classList.add('leaving'); return; }
+        const cur = curtain();
+        await cur.close();
+        openGame(GAMES.find(g => g.id === id), cur);
       },
       onTreehouse: talk,
     });
@@ -91,6 +101,8 @@ const hub = (() => {
   return {
     show(first = false) {
       ensure();
+      playMusic('island');
+      startAmbience();
       scr.hidden = false;
       scr.classList.remove('leaving');
       scr.append(starCounter());
@@ -109,7 +121,7 @@ const hub = (() => {
 // ---------- Oyun kabuğu ----------
 let current = null;
 
-function openGame(game) {
+function openGame(game, cur = null) {
   const timers = new Set();
   let alive = true;
   let instruction = null;
@@ -123,10 +135,14 @@ function openGame(game) {
   const scr = h('section', { class: `game-screen theme-${game.theme}` },
     h('header', { class: 'game-head' }, homeBtn, h('div', { class: 'head-mid' }, title, dots), speakBtn),
     board, m);
+  scr.prepend(sceneLayer(game.theme));
   app.append(scr);
   scr.append(starCounter());
+  hub.hide();
+  stopAmbience();
+  playMusic('play');
   requestAnimationFrame(() => scr.classList.add('in'));
-  setTimeout(() => hub.hide(), 350);
+  if (cur) cur.open();
 
   const ctx = {
     board,
@@ -144,6 +160,7 @@ function openGame(game) {
     /** doğru cevap: ses + konfeti + yıldız */
     good(el) {
       sfx.correct();
+      buzz(HAPTIC.good);
       const [x, y] = center(el);
       confetti(x, y);
       el.classList?.remove('bounce'); void el.offsetWidth; el.classList?.add('bounce');
@@ -154,12 +171,14 @@ function openGame(game) {
     /** yıldız vermeden küçük kutlama */
     cheer(el) {
       sfx.correct();
+      buzz(HAPTIC.good);
       const [x, y] = center(el);
       confetti(x, y, 12);
       mood(m, 'happy');
     },
     bad(el) {
       sfx.wrong();
+      buzz(HAPTIC.bad);
       el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
       mood(m, 'oops');
     },
@@ -168,9 +187,14 @@ function openGame(game) {
       alive = false;
       cleanup();
       markPlayed(game.id);
+      buzz(HAPTIC.big);
       const choice = await celebrate();
-      if (choice === 'again') { close(true); openGame(game); }
-      else close();
+      if (choice === 'again') {
+        const c = curtain();
+        await c.close();
+        close(true);
+        openGame(game, c);
+      } else close();
     },
   };
 
@@ -194,9 +218,18 @@ function openGame(game) {
     current = null;
   }
 
-  homeBtn.addEventListener('click', () => { sfx.tap(); close(); });
+  async function goHome() {
+    sfx.tap();
+    buzz(HAPTIC.tap);
+    const c = curtain();
+    await c.close();
+    close();
+    c.open();
+  }
+
+  homeBtn.addEventListener('click', goHome);
   speakBtn.addEventListener('click', () => { sfx.tap(); if (instruction) say(...instruction); });
-  m.addEventListener('click', () => { if (instruction) say(...instruction); mood(m, 'happy'); });
+  m.addEventListener('click', () => { if (instruction) say(...instruction); mood(m, 'happy'); buzz(HAPTIC.tap); });
 
   current = { close };
   teardown = game.start(ctx) || null;
@@ -261,6 +294,10 @@ function openParent() {
       seg('Seslendirme', s.voice, [[true, 'Açık'], [false, 'Kapalı']], v => { s.voice = v; }),
       h('label', {}, 'Ses efektleri'),
       seg('Ses efektleri', s.sound, [[true, 'Açık'], [false, 'Kapalı']], v => { s.sound = v; }),
+      h('label', {}, 'Arka plan müziği'),
+      seg('Arka plan müziği', s.music, [[true, 'Açık'], [false, 'Kapalı']], v => { s.music = v; refreshMusic(); }),
+      h('label', {}, 'Titreşim'),
+      seg('Titreşim', s.haptics, [[true, 'Açık'], [false, 'Kapalı']], v => { s.haptics = v; buzz(HAPTIC.good); }),
       h('label', {}, 'Konuşma hızı'),
       seg('Konuşma hızı', s.rate, [[0.8, 'Yavaş'], [0.95, 'Normal'], [1.1, 'Hızlı']], v => { s.rate = v; say({ tr: 'Merhaba Mete!', en: 'Hello Mete!' }); }),
       h('div', { class: 'parent-stats' },

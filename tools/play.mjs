@@ -122,6 +122,21 @@ const plays = {
   async saklambac() {
     await untilCele(async () => { await p.evaluate(() => document.querySelectorAll('.mole.up .mole-pop[data-ok]').forEach(x => x.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })))); await sleep(250); }, 150000);
   },
+  async duygular() {
+    await untilCele(async () => { await p.evaluate(() => { if (!document.querySelector('.choice.win')) { const c=[...document.querySelectorAll('.choice')]; const t=document.querySelector('.game-screen'); const want=t.querySelector('.instruction'); c.find(x=>!x.dataset.tried)?.click(); c.forEach(x=>{ if(x.classList.contains('shake')) x.dataset.tried=1; }); } }); await sleep(300); });
+  },
+  async araclar() {
+    await untilCele(async () => { await p.evaluate(() => { if (!document.querySelector('.choice.win')) { const c=[...document.querySelectorAll('.choice')]; c.find(x=>!x.dataset.tried)?.click(); c.forEach(x=>{ if(x.classList.contains('shake')) x.dataset.tried=1; }); } }); await sleep(300); });
+  },
+  async hava() {
+    await untilCele(async () => {
+      await p.evaluate(() => {
+        const it = [...document.querySelectorAll('.wx-item[data-ok]')].find(x => !x.dataset.done);
+        if (it) { it.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 1 })); it.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 1 })); }
+      });
+      await sleep(500);
+    });
+  },
   async muzik() {
     await untilCele(async () => {
       await p.evaluate(() => document.querySelector('.xbar.next')?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })));
@@ -141,7 +156,7 @@ for (const [id, fn] of Object.entries(plays)) {
     if (id === 'muzik') { await sleep(2500); await shot(`${outDir}/play-${id}-mid.png`); }
     if (id === 'balonlar') { await sleep(2500); await shot(`${outDir}/play-${id}-mid.png`); }
     if (id === 'sayilar') { await shot(`${outDir}/play-${id}-mid.png`); }
-    if (['boyama','harfler','yapboz','oruntu','besle','saklambac'].includes(id)) { await sleep(id === 'saklambac' ? 2600 : id === 'oruntu' ? 2200 : 300); await shot(`${outDir}/play-${id}-mid.png`); }
+    if (['boyama','harfler','yapboz','oruntu','besle','saklambac','duygular','araclar','hava'].includes(id)) { await sleep(id === 'saklambac' ? 2600 : id === 'oruntu' ? 2200 : 300); await shot(`${outDir}/play-${id}-mid.png`); }
     await fn();
     results[id] = `OK ${((Date.now() - t0) / 1000).toFixed(0)}s`;
     await sleep(1600);

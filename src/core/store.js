@@ -5,7 +5,7 @@ const defaults = () => ({
   stars: 0,
   stickers: [],
   plays: {},
-  settings: { lang: 'tr', sound: true, voice: true, rate: 0.95 },
+  settings: { lang: 'tr', sound: true, music: true, voice: true, haptics: true, rate: 0.95 },
 });
 
 function load() {

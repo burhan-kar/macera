@@ -1,5 +1,6 @@
 // Seslendirme: cihazın konuşma sentezi, TR/EN/İkisi dil modu
 import { store } from './store.js';
+import { duck } from './music.js';
 
 const synth = typeof window !== 'undefined' ? window.speechSynthesis : null;
 let voices = [];
@@ -94,4 +95,4 @@ export function unlockVoice() {
 }
 
 export function onTalking(fn) { listeners.add(fn); return () => listeners.delete(fn); }
-function emit(on) { listeners.forEach(fn => fn(on)); }
+function emit(on) { duck(on); listeners.forEach(fn => fn(on)); }

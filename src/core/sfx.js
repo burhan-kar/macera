@@ -19,6 +19,9 @@ export function unlockAudio() {
   } catch { /* ses yok */ }
 }
 
+export const getCtx = () => ctx;
+export const getMaster = () => master;
+
 const on = () => ctx && master && store.settings.sound;
 
 function tone(freq, { type = 'sine', at = 0, dur = 0.2, vol = 0.4, attack = 0.005, slideTo = null } = {}) {
