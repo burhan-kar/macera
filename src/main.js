@@ -2,7 +2,7 @@
 import { createIsland } from './island/island.js';
 import { ZONE_ICON, ICON, ANIMALS, animalSVG } from './core/art.js';
 import { h, mascot, mood, confetti, center, flyStar, starCounter, refreshStars, celebrate, holdButton, wait } from './core/ui.js';
-import { say, stop as stopVoice, unlockVoice, label, subLabel } from './core/voice.js';
+import { say, stop as stopVoice, unlockVoice, label, subLabel, prefetchClips } from './core/voice.js';
 import { sfx, unlockAudio } from './core/sfx.js';
 import { playMusic, startAmbience, stopAmbience, refreshMusic, buzz, HAPTIC } from './core/music.js';
 import { sceneLayer, curtain } from './core/scene.js';
@@ -46,6 +46,7 @@ function splash() {
     buzz(HAPTIC.tap);
     playMusic('island');
     startAmbience();
+    prefetchClips();
     scr.classList.add('out');
     setTimeout(() => scr.remove(), 600);
     hub.show(true);

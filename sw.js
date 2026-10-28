@@ -1,5 +1,5 @@
 // İnternetsiz çalışma: tüm dosyalar ilk açılışta önbelleğe alınır.
-const VERSION = 'macera-96728aeb5a';
+const VERSION = 'macera-02bc9221c8';
 const FILES = [
   "./",
   "index.html",
@@ -35,7 +35,8 @@ const FILES = [
   "audio/star.mp3",
   "audio/tap.mp3",
   "audio/whoosh.mp3",
-  "audio/wrong.mp3"
+  "audio/wrong.mp3",
+  "voice/index.json"
 ];
 
 self.addEventListener('install', e => {

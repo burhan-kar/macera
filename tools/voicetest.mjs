@@ -1,0 +1,18 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch({ args: ['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--autoplay-policy=no-user-gesture-required'] });
+const p = await b.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true });
+const errs = []; const clipHits = [];
+p.on('pageerror', e => errs.push('PAGEERR ' + e.message));
+p.on('response', r => { if (r.url().includes('/voice/') && r.url().endsWith('.mp3')) clipHits.push([r.url().split('/').pop(), r.status()]); });
+await p.addInitScript(() => { window.__plays = []; const patch = C => { if (!C) return; const o = C.prototype.createBufferSource; C.prototype.createBufferSource = function () { const n = o.call(this); const s = n.start.bind(n); n.start = (...a) => { window.__plays.push(n.buffer ? +n.buffer.duration.toFixed(2) : 0); return s(...a); }; return n; }; }; patch(window.AudioContext); patch(window.webkitAudioContext); });
+await p.goto('http://localhost:8080/');
+await p.click('.btn-start');
+await p.waitForTimeout(5000);
+await p.evaluate(() => window.__macera.openGame('hayvanlar'));
+await p.waitForTimeout(3000);
+await p.evaluate(() => document.querySelector('.choice')?.click());
+await p.waitForTimeout(2500);
+console.log('istenen klip:', clipHits.length, clipHits.slice(0, 6));
+console.log('çalan ses sayısı:', await p.evaluate(() => window.__plays.length));
+console.log('hata:', errs.length ? errs.slice(0,2) : 'yok');
+await b.close();

@@ -21,7 +21,7 @@ for (const dir of ['fonts', 'icons', 'audio']) {
 const hash = createHash('sha256');
 list.forEach(f => hash.update(readFileSync(f)));
 const version = 'macera-' + hash.digest('hex').slice(0, 10);
-const files = ['./', ...list];
+const files = ['./', ...list, 'voice/index.json'];
 writeFileSync('sw.js', readFileSync('tools/sw.template.js', 'utf8')
   .replace('__VERSION__', version)
   .replace('__FILES__', JSON.stringify(files, null, 2)));
