@@ -1,7 +1,7 @@
 // Örüntü: dizide sırada ne var?
 import { FRUITS, SHAPES, fruitSVG, shapeSVG } from '../core/art.js';
 import { h, sample, shuffle, wait, flyInto } from '../core/ui.js';
-import { sfx, SCALE } from '../core/sfx.js';
+import { sfx } from '../core/sfx.js';
 
 const fruitItems = () => FRUITS.map(f => ({ key: f.id, svg: fruitSVG(f.id), name: { tr: f.name.tr, en: f.en1 } }));
 const shapeItems = () => SHAPES.map(s => ({ key: s.id, svg: shapeSVG(s.id, s.color), name: { tr: s.name.tr.toLocaleLowerCase('tr'), en: s.name.en.toLowerCase() } }));
@@ -59,7 +59,7 @@ export default {
             for (let i = 0; i < row.children.length; i++) {
               const c = row.children[i];
               c.classList.remove('bounce'); void c.offsetWidth; c.classList.add('bounce');
-              sfx.note(SCALE[i % SCALE.length]);
+              sfx.note(i % 8);
               await wait(170);
             }
             await Promise.all([ctx.say({ tr: `Evet! Sırada ${it.name.tr} vardı!`, en: `Yes! Next comes the ${it.name.en}!` }), wait(700)]);
@@ -78,7 +78,7 @@ export default {
       for (let i = 0; i < cells.length; i++) {
         if (!ctx.alive()) return;
         cells[i].classList.add('show');
-        sfx.note(SCALE[letters.indexOf(unit[i % unit.length]) * 2]);
+        sfx.note((letters.indexOf(unit[i % unit.length]) * 2) % 8);
         await wait(230);
       }
       hole.classList.add('show');

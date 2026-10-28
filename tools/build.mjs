@@ -15,7 +15,7 @@ await build({
 });
 
 const list = ['index.html', 'style.css', 'app.js', 'manifest.webmanifest'];
-for (const dir of ['fonts', 'icons']) {
+for (const dir of ['fonts', 'icons', 'audio']) {
   for (const f of readdirSync(dir)) if (statSync(join(dir, f)).isFile() && !f.endsWith('.txt')) list.push(`${dir}/${f}`);
 }
 const hash = createHash('sha256');

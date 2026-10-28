@@ -1,6 +1,6 @@
 // Müzik: ksilofonla parlayan tuşları takip ederek şarkı çal
 import { h, wait } from '../core/ui.js';
-import { sfx, SCALE } from '../core/sfx.js';
+import { sfx } from '../core/sfx.js';
 
 const BARS = [
   { c: '#FF4B4B', n: 'Do' }, { c: '#FF9A2E', n: 'Re' }, { c: '#FFD43B', n: 'Mi' }, { c: '#5BBA6F', n: 'Fa' },
@@ -33,7 +33,7 @@ export default {
     function ring(i) {
       const el = bars[i];
       el.classList.remove('hit'); void el.offsetWidth; el.classList.add('hit');
-      sfx.note(SCALE[i]);
+      sfx.note(i);
       const n = h('i', { style: { left: `${(i + 0.5) * (100 / 8)}%`, color: BARS[i].c } }, i % 2 ? '♪' : '♫');
       notesFx.append(n);
       setTimeout(() => n.remove(), 1200);

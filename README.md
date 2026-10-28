@@ -44,7 +44,8 @@ Daha doğal Türkçe ses için: Ayarlar › Erişilebilirlik › Seslendirilen �
 
 ## Teknik
 
-- Saf HTML/CSS/JS, `three.js` ile 3D ada. Tüm modeller, çizimler, ses efektleri ve arka plan müziği kodla üretilir; dış görsel/ses dosyası yoktur.
+- Saf HTML/CSS/JS, `three.js` ile 3D ada. Tüm modeller ve çizimler kodla üretilir; hazır görsel kullanılmaz.
+- **Ses tasarımı:** 22 ses efekti ve 2 müzik döngüsü, `Tone.js` ile (FM sentez, marimba, çan, reverb, kompresör) `tools/sounds.js` tariflerinden üretilir. `npm run audio` komutu bunları Chromium'da offline render edip ffmpeg ile mp3'e çevirir ve `audio/` klasörüne yazar (toplam ~245 KB). Çalma anında örnekler kullanılır; dosya yüklenemezse koddaki sentez yedeği devreye girer.
 - Karakterler nefes alır, kulakları oynar, dokununca zıplar. Her sahnede uçan kuş/kelebek gibi hareketli dekor vardır; oyun geçişleri renkli perdeyle yapılır.
 - Yazı tipi: Fredoka (SIL Open Font License, `fonts/OFL.txt`).
 - Kaynak kod `src/` içinde; yayınlanan dosyalar `app.js` ve `sw.js` derlemeyle üretilir.
@@ -52,6 +53,7 @@ Daha doğal Türkçe ses için: Ayarlar › Erişilebilirlik › Seslendirilen �
 ```bash
 npm install
 npm run build          # src/ → app.js + sw.js
+npm run audio          # tools/sounds.js → audio/*.mp3 (Tone.js + ffmpeg)
 npm run dev            # http://localhost:8080
 node tools/play.mjs <klasör> 390 844   # tüm oyunları otomatik oynatan test
 ```
